@@ -5,32 +5,40 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 export async function POST(request: Request) {
   try {
-    const { subjects, deadline } = await request.json();
+    const { subjects } = await request.json();
 
-    if (!subjects || !deadline) {
+    if (!subjects) {
       return NextResponse.json(
-        { error: 'Subjects and deadline are required.' },
+        { error: 'Subjects input is required.' },
         { status: 400 }
       );
     }
 
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-    const prompt = `
-      Create a structured study schedule based on the following topics and deadline.
-      The user needs to cover these subjects: ${subjects}.
-      The deadline is ${deadline}.
+    // Get current date and time
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const currentTimeString = currentDate.toTimeString().split(' ')[0].substring(0, 5); // HH:MM format
 
-      Generate a list of tasks specified by the user.
-      If user says something like - I have subject A and subject B to study, A will take be 5 hours and B will take 3 hours. deadline's this date. B is harder than A. I'm busy from this time to that time on this day.
-      Now the deadline is the focal point. Then you will take all that into consideration and generate a healthy recommended schedule up to the deadline,
-      Each task must be a JSON object with the following keys: "id", "title", "description", "dueDate", "priority", "completedHours".
-      The "dueDate" should be in 'YYYY-MM-DD' format.
-      The "description" should be concise and clear, don't add anything by yourself. (e.g. if the user says they have to study CSE340 the description would simply be "Study CSE340", nothing more).
-      The "priority" should be High, Medium, or Low.
-      The "completedHours" should be all initially 0 of course.
+    const prompt = `
+      Today's date is ${currentDateString} and the current time is ${currentTimeString}.
+      
+      Create a structured study schedule based on the following user input: ${subjects}
+
+      Extract the deadline, subjects, time requirements, and any constraints from the user's text.
+      Generate a list of tasks based on what the user specified.
+      
+      Each task must be a JSON object with the following keys: "id", "title", "description", "dueDate", "dueTime", "priority", "completedHours".
+      The "id" is the task id, not particularly important here.
+      The "title" should be the name of the course/subject (e.g. if the user says they need to study CSE471 the title would be "CSE471").
+      The "description" should be concise and clear, there should not be any extra words. (e.g. if the user says they have to study CSE340 the description would simply be "Study CSE340", nothing more).
+      The "dueDate" should be in 'YYYY-MM-DD' format and should be between today (${currentDateString}) and the deadline mentioned by the user.
+      The "dueTime" should be in 'HH:MM' format.
+      The "priority" should be High, Medium, or Low based on difficulty or importance mentioned by the user.
+      The "completedHours" should be all initially 0.
       Return ONLY a valid JSON object in the following format: { "tasks": [...] }.
-      Do not include any other text, explanations, or markdown formatting.
+      Do not include any other extra text, explanations, or markdown formatting.
     `;
 
     const result = await model.generateContent(prompt);
