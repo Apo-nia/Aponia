@@ -7,11 +7,10 @@ const prisma = new PrismaClient();
 // GET /api/dashboard/[userId] - Get dashboard data for user
 export async function GET(
   request: NextRequest,
-  context: { params: { userId: string } }
-  
+  context: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = context.params;
+    const { userId } = await context.params;
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
 
