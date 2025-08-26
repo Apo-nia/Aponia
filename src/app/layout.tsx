@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ZenStudy: Your all-in-one study and content management planner",
+  title: "Aponia: Your all-in-one study and content management planner",
   description:
-    "ZenStudy helps you organize, plan, and manage your study and content efficiently.",
+    "Aponia helps you organize, plan, and manage your study and content efficiently.",
 };
 
 export default function RootLayout({

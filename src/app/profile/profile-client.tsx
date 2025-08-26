@@ -176,7 +176,7 @@ export default function ProfileClient() {
 
       {/* Profile Display/Edit Form */}
       {user && (
-        <div className="space-y-6 bg-white rounded-lg shadow-lg p-6">
+        <div className="space-y-6 rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-semibold">Profile Information</h2>
             <div className="flex gap-2">
