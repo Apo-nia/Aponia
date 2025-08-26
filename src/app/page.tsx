@@ -1,10 +1,10 @@
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-purple-100">
+    <div className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-5xl font-extrabold text-indigo-700 mb-4 text-center drop-shadow-lg">
         Aponia
       </h1>
-      <p className="text-xl text-gray-700 font-medium text-center max-w-xl">
+      <p className="text-xl font-medium text-center max-w-xl">
         Your all-in-one study and content management planner
       </p>
       {/* You can add a decorative divider or icon below if desired */}
