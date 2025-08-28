@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import TaskPreview from './TaskPreview';
 import DayView from './DayView';
-import { TaskStatusManager, TaskStatus, TaskWithStatus } from '@/lib/taskStatusManager';
+import { TaskStatusManager, TaskWithStatus } from '@/lib/taskStatusManager';
 
 interface Task extends TaskWithStatus {
-    // Extends the TaskWithStatus interface from our status manager
+    //Extends the TaskWithStatus interface from status manager
 }
 
 const Calendar: React.FC = () => {
@@ -62,11 +62,11 @@ const Calendar: React.FC = () => {
 
     const handleTaskClick = async (taskId: string) => {
         setTaskLoading(true);
-        // Close day view if it's open
         setSelectedDay(null);
         
         try {
-            const response = await fetch(`/api/task-details/${taskId}`);
+            const userId = 'user123'; // This should match the userId used in fetchTasks
+            const response = await fetch(`/api/task-details/${taskId}?userId=${userId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch task details');
             }
@@ -106,7 +106,6 @@ const Calendar: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    // Update the task in our local state
                     setTasks(prevTasks => 
                         prevTasks.map(task => 
                             task.id === taskId ? data.task : task
@@ -120,20 +119,15 @@ const Calendar: React.FC = () => {
     };
 
     const getTaskColor = (task: TaskWithStatus) => {
-        // If task has a status, use status color
-        if (task.status) {
-            const statusColor = TaskStatusManager.getStatusColor(task.status);
-            return statusColor.replace('bg-', 'bg-').replace('text-white', '') + ' hover:opacity-80';
-        }
         
         // Fallback to priority colors
         switch (task.priority) {
             case 'High':
-                return 'bg-red-500 hover:bg-red-600';
+                return 'bg-red-300 hover:bg-red-400';
             case 'Medium':
-                return 'bg-yellow-500 hover:bg-yellow-600';
+                return 'bg-yellow-300 hover:bg-yellow-400';
             case 'Low':
-                return 'bg-green-500 hover:bg-green-600';
+                return 'bg-green-300 hover:bg-green-400';
             default:
                 return 'bg-gray-400 hover:bg-gray-500';
         }
@@ -228,25 +222,24 @@ const Calendar: React.FC = () => {
                                 <div className="flex-1 flex flex-col justify-start space-y-1 overflow-hidden">
                                     {taskForDay.length > 0 && (
                                     <>
-                                        {/* Show first task */}
+                                        
                                         <div
                                             key={taskForDay[0].id}
                                             onClick={() => handleTaskClick(taskForDay[0].id)}
-                                            className={`w-full text-xs md:text-sm text-left px-2 py-1 mt-1 rounded-md cursor-pointer text-white transition-all duration-200 hover:scale-[1.02] ${
+                                            className={`w-full text-xs md:text-sm text-left px-2 py-1 mt-1 rounded-md cursor-pointer text-black transition-all duration-200 hover:scale-[1.02] ${
                                                 isCurrentMonth ? getTaskColor(taskForDay[0]) : 'bg-gray-400 hover:bg-gray-500 opacity-70'
                                             }`}
                                         >
                                             <div className="truncate">{taskForDay[0].title}</div>
                                         </div>
                                         
-                                        {/* Show count for additional tasks */}
                                         {taskForDay.length > 1 && (
                                             <div
                                                 onClick={() => handleDayClick(date, taskForDay)}
                                                 className={`w-full text-xs text-center px-2 py-1 mt-1 rounded-md cursor-pointer transition-all duration-200 hover:scale-[1.02] ${
                                                     isCurrentMonth 
-                                                        ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-                                                        : 'bg-gray-500 hover:bg-gray-600 text-white opacity-70'
+                                                        ? 'bg-blue-200 hover:bg-blue-600 text-black' 
+                                                        : 'bg-gray-500 hover:bg-gray-600 text-black opacity-70'
                                                 }`}
                                             >
                                                 +{taskForDay.length - 1} more

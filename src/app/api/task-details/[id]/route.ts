@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { mockDatabase } from '../../../../../lib/database';
+import { TaskWithStatus } from '../../../../../lib/taskStatusManager';
 
 export async function GET(
   request: NextRequest,
@@ -6,36 +8,30 @@ export async function GET(
 ) {
   try {
     const taskId = params.id;
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId') || 'user123'; // Default to user123
 
-    // Mock task details data - replace with actual database query
-    const taskDetails = {
-      id: taskId,
-      title: "Sample Task",
-      description: "This is a detailed description of the task. It includes all the important information about what needs to be done.",
-      dueDate: "2025-08-26",
-      priority: "High",
-      completedHours: 2,
-      tags: ["urgent", "project-alpha", "development"]
-    };
+    const user = mockDatabase[userId];
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
 
-    // Simulate different tasks based on ID
-    if (taskId === "1") {
-      taskDetails.title = "Complete Project Documentation";
-      taskDetails.description = "Write comprehensive documentation for the new project including API references, user guides, and deployment instructions.";
-      taskDetails.priority = "High";
-    } else if (taskId === "2") {
-      taskDetails.title = "Review Code Changes";
-      taskDetails.description = "Review the latest pull requests and provide feedback on the code quality and implementation.";
-      taskDetails.priority = "Medium";
-    } else if (taskId === "3") {
-      taskDetails.title = "Team Meeting Preparation";
-      taskDetails.description = "Prepare agenda and materials for the upcoming team meeting scheduled for next week.";
-      taskDetails.priority = "Low";
+    // Find the task in user's tasks
+    const task: TaskWithStatus | undefined = user.tasks.find((t: TaskWithStatus) => t.id === taskId);
+    
+    if (!task) {
+      return NextResponse.json(
+        { success: false, error: 'Task not found' },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
       success: true,
-      task: taskDetails
+      task: task
     });
 
   } catch (error) {

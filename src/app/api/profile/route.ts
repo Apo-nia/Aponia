@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
 import { mockDatabase } from '../../../../lib/database';
 
-type PetStatusResponse = {
-    success: boolean;
-    petStatus?: string;
-    error?: string;
-};
-
-export async function GET(request: Request): Promise<NextResponse<PetStatusResponse>> {
+export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
@@ -23,6 +17,11 @@ export async function GET(request: Request): Promise<NextResponse<PetStatusRespo
 
     return NextResponse.json({
         success: true,
-        petStatus: user.petStatus,
+        profile: {
+            name: user.name,
+            focusPoints: user.focusPoints,
+            petStatus: user.petStatus,
+            streak: user.streak
+        }
     });
 }

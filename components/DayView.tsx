@@ -12,18 +12,12 @@ interface DayViewProps {
 
 const DayView: React.FC<DayViewProps> = ({ date, tasks, onClose, onTaskClick }) => {
     const getTaskColor = (task: TaskWithStatus) => {
-        // If task has a status, use status color
-        if (task.status) {
-            const statusColor = TaskStatusManager.getStatusColor(task.status);
-            return statusColor.replace('text-white', '') + ' hover:opacity-80';
-        }
-        
-        // Fallback to priority colors
+
         switch (task.priority) {
-            case 'High': return 'bg-red-500 hover:bg-red-600';
-            case 'Medium': return 'bg-yellow-500 hover:bg-yellow-600';
-            case 'Low': return 'bg-green-500 hover:bg-green-600';
-            default: return 'bg-gray-400 hover:bg-gray-500';
+            case 'High': return 'bg-red-300 hover:bg-red-400';
+            case 'Medium': return 'bg-yellow-300 hover:bg-yellow-400';
+            case 'Low': return 'bg-green-300 hover:bg-green-400';
+            default: return 'bg-gray-300 hover:bg-gray-400';
         }
     };
 
@@ -71,8 +65,8 @@ const DayView: React.FC<DayViewProps> = ({ date, tasks, onClose, onTaskClick }) 
                                 >
                                     <div className="flex justify-between items-start">
                                         <div className="flex-1">
-                                            <h3 className="font-medium text-sm mb-1">{task.title}</h3>
-                                            <div className="flex gap-2 text-xs opacity-80">
+                                            <h3 className="font-medium text-sm mb-1 text-black">{task.title}</h3>
+                                            <div className="flex gap-2 text-xs text-gray-800">
                                                 <span>{task.priority} Priority</span>
                                                 <span>•</span>
                                                 <span>{TaskStatusManager.getStatusText(task.status)}</span>

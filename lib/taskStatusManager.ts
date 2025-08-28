@@ -1,5 +1,5 @@
 // Task Status Manager
-// Handles automatic status updates based on time and user actions
+
 
 export enum TaskStatus {
   UPCOMING = 'upcoming',
@@ -13,21 +13,18 @@ export interface TaskWithStatus {
   title: string;
   description: string;
   dueDate: string;
-  dueTime: string; // New field for specific completion time
+  dueTime: string;
   priority: string;
   completedHours: number;
   tags: string[];
   status: TaskStatus;
-  completedAt?: string; // When user marked it as done
-  autoUpdatedAt?: string; // When status was auto-updated
+  completedAt?: string;
+  autoUpdatedAt?: string; 
 }
 
 export class TaskStatusManager {
-  /**
-   * Determines the current status of a task based on current time and due date/time
-   */
   static determineTaskStatus(task: TaskWithStatus, currentTime: Date = new Date()): TaskStatus {
-    // If user manually marked as done, keep it done
+    
     if (task.status === TaskStatus.DONE && task.completedAt) {
       return TaskStatus.DONE;
     }
@@ -45,14 +42,9 @@ export class TaskStatusManager {
     if (hoursUntilDue <= 2 && hoursUntilDue > 0) {
       return TaskStatus.ONGOING;
     }
-
-    // Default to upcoming
     return TaskStatus.UPCOMING;
   }
 
-  /**
-   * Updates task status automatically based on current time
-   */
   static updateTaskStatus(task: TaskWithStatus, currentTime: Date = new Date()): TaskWithStatus {
     const newStatus = this.determineTaskStatus(task, currentTime);
     
@@ -68,9 +60,6 @@ export class TaskStatusManager {
     return task;
   }
 
-  /**
-   * Marks task as completed by user
-   */
   static markTaskAsCompleted(task: TaskWithStatus, completedTime: Date = new Date()): TaskWithStatus {
     return {
       ...task,
@@ -79,9 +68,6 @@ export class TaskStatusManager {
     };
   }
 
-  /**
-   * Gets status color for UI display
-   */
   static getStatusColor(status: TaskStatus): string {
     switch (status) {
       case TaskStatus.UPCOMING:
@@ -96,10 +82,6 @@ export class TaskStatusManager {
         return 'bg-gray-500 text-white';
     }
   }
-
-  /**
-   * Gets human-readable status text
-   */
   static getStatusText(status: TaskStatus): string {
     switch (status) {
       case TaskStatus.UPCOMING:

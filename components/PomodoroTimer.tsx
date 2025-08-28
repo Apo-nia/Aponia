@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 function getOrCreateUserId() {
   let userId = localStorage.getItem('UserId');
   if (!userId) {
-    userId = Math.random().toString(36).substring(2, 15);
+    userId = 'user123';
     localStorage.setItem('UserId', userId);
   }
   return userId;
@@ -31,6 +31,32 @@ const PomodoroTimer = () => {
     });
   };
 
+  const updateStreak = async () => {
+    if (!userId) return;
+    try {
+      await fetch('/api/streak', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, action: 'complete' }),
+      });
+    } catch (error) {
+      console.error('Failed to update streak:', error);
+    }
+  };
+
+  const updateFocusPoints = async () => {
+    if (!userId) return;
+    try {
+      await fetch('/api/focuspoint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, action: 'add', amount: 25 }),
+      });
+    } catch (error) {
+      console.error('Failed to update focus points:', error);
+    }
+  };
+
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isActive && (minutes > 0 || seconds > 0)) {
@@ -45,9 +71,10 @@ const PomodoroTimer = () => {
         }
       }, 1000);
     } else if (isActive && minutes === 0 && seconds === 0) {
-      // when Pomodoro finishes, increment sessions and switch to break
       if (sessionType === 'work') {
         incrementSessions();
+        updateStreak();
+        updateFocusPoints(); 
         setSessionType('break');
         setMinutes(5);
         setSeconds(0);

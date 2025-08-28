@@ -3,3 +3,10 @@ export interface User {
     name: string;
     focusPoints: number;
 }
+
+export interface StreakData {
+    currentStreak: number;
+    lastCompletionDate: string; // ISO date string
+    canRestore: boolean;
+    lastRestoreDate?: string; // ISO date string
+}
