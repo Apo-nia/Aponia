@@ -20,11 +20,11 @@ export async function GET(request: NextRequest) {
     }
     
     if (category) {
-      where.category_no = BigInt(category);
+      where.category_no = parseInt(category);
     }
     
     if (priority) {
-      where.priority_no = BigInt(priority);
+      where.priority_no = parseInt(priority);
     }
 
     const tasks = await prisma.tasks.findMany({
@@ -93,11 +93,11 @@ export async function POST(request: NextRequest) {
     }
     
     if (body.category_no !== undefined) {
-      taskData.category_no = BigInt(body.category_no);
+      taskData.category_no = parseInt(body.category_no);
     }
     
     if (body.priority_no !== undefined) {
-      taskData.priority_no = BigInt(body.priority_no);
+      taskData.priority_no = parseInt(body.priority_no);
     }
 
     // If user_id is provided, include it (otherwise let DB generate default)
