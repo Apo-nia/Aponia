@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 // GET /api/tasks/[id] - Get a specific task by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
