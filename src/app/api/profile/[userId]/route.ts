@@ -7,10 +7,10 @@ const prisma = new PrismaClient();
 // GET /api/profile/[userId] - Get user profile
 export async function GET(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
 
     const user = await prisma.users.findUnique({
       where: { id: userId }
@@ -46,10 +46,10 @@ export async function GET(
 // PUT /api/profile/[userId] - Update user profile
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
-    const { userId } = params;
+    const { userId } = await params;
     const body = await request.json();
 
     // Check if user exists
