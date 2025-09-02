@@ -16,7 +16,7 @@ export default function StreaksPage() {
             <div className="flex justify-center items-center w-full max-w-4xl">
                 <div className="bg-[#ace2e9] bg-opacity-70 backdrop-blur-sm p-8 rounded-2xl shadow-lg w-full max-w-md">
                     <h1 className="text-2xl font-bold text-center mb-6">Streak Management</h1>
-                    <StreakPoints />
+                    <StreakPoints userId="user123" />
                 </div>
             </div>
             

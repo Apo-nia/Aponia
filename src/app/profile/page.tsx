@@ -1,7 +1,6 @@
 "use client";
 
 import Profile from '../../../components/Profile';
-import StreakPoints from '../../../components/StreakPoints';
 import Link from 'next/link';
 
 export default function ProfilePage()  {
@@ -16,7 +15,7 @@ export default function ProfilePage()  {
       >
         <div className="flex justify-center items-center w-full max-w-4xl">
           <div>
-            <Profile userId="user456" />
+            <Profile userId="user123" />
           </div>
         </div>
         <Link href="/streaks">

@@ -9,7 +9,11 @@ interface Task extends TaskWithStatus {
     //Extends the TaskWithStatus interface from status manager
 }
 
-const Calendar: React.FC = () => {
+interface CalendarProps {
+    userId: string;
+}
+
+const Calendar: React.FC<CalendarProps> = ({ userId }) => {
     const [tasks, setTasks] = useState<TaskWithStatus[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -21,7 +25,6 @@ const Calendar: React.FC = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const userId = 'user123'; //will be dynamic
                 const response = await fetch(`/api/calendar?userId=${userId}`);
 
                 if (!response.ok) {
@@ -41,7 +44,7 @@ const Calendar: React.FC = () => {
         };
 
         fetchTasks();
-    }, []);
+    }, [userId]);
 
     // Auto-update calendar when day changes and update task statuses
     useEffect(() => {
@@ -65,7 +68,6 @@ const Calendar: React.FC = () => {
         setSelectedDay(null);
         
         try {
-            const userId = 'user123'; // This should match the userId used in fetchTasks
             const response = await fetch(`/api/task-details/${taskId}?userId=${userId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch task details');

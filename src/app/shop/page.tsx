@@ -1,10 +1,8 @@
-"use client";
+import AccessoryShop from '../../../components/AccessoryShop';
 
-import Calendar from '../../../components/Calendar';
-
-const CalendarPage = () => {
-    return (
-        <main 
+export default function ShopPage() {
+  return (
+    <main 
             className="relative flex min-h-screen flex-col items-center justify-center p-12"
             style={{
             backgroundImage: `url('/background.jpg')`,
@@ -13,10 +11,8 @@ const CalendarPage = () => {
             }}
         >
         <div>
-            <Calendar userId={'user123'} />
+            <AccessoryShop userId={'user123'} />
         </div>
     </main>
-    );
-};
-
-export default CalendarPage;
+  );
+}

@@ -42,7 +42,8 @@ function updateStreakStatus(userData: UserData): UserData {
 }
 
 export async function GET(request: Request) {
-    const userId = "user123"
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
     if (!userId) {
         return NextResponse.json({ success: false, error: 'Missing userId' }, { status: 400 });

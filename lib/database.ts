@@ -1,8 +1,34 @@
+export async function getUser(userId: string) {
+    // Return user data from mockDatabase
+    const user = mockDatabase[userId];
+    if (!user) {
+        return {
+            accessories: [],
+            focusPoints: 0,
+            // ...other user fields...
+        };
+    }
+    // Add accessories array if not present
+    return {
+        accessories: user.accessories || [],
+        focusPoints: user.focusPoints,
+        // ...other user fields...
+    };
+}
+export async function updateUserAccessory(name: string, userId: any) {
+    // TODO: Implement logic to add accessory to user
+    return true;
+}
+export async function deductFocusPoints(amount: number, userId: any) {
+    // TODO: Implement logic to deduct focus points
+    return true;
+}
 import { TaskWithStatus, TaskStatus } from './taskStatusManager';
 
 export type UserData = {
     name: string;
     focusPoints: number;
+    accessories: string[];
     petType: 'cow' | 'tutel' | 'frog';
     petMood: 'happy' | 'sad' | 'hungry' | 'sleepy';
     streak: {
@@ -18,6 +44,7 @@ export const mockDatabase: { [userId: string]: UserData } = {
     user123: {
         name: 'Lazin Shimran',
         focusPoints: 500,
+        accessories: [],
         petType: 'cow',
         petMood: 'happy',
         streak: {
@@ -96,7 +123,7 @@ export const mockDatabase: { [userId: string]: UserData } = {
                             id: '10',
                             title: 'Test Project',
                             description: 'Must be done',
-                            dueDate: '2025-08-02',
+                            dueDate: '2025-09-02',
                             dueTime: '15:00',
                             priority: 'High',
                             completedHours: 0,
@@ -114,11 +141,12 @@ export const mockDatabase: { [userId: string]: UserData } = {
                             tags: ['next'],
                             status: TaskStatus.UPCOMING
                         },
-                    ]
-        },
-        user456: {
+        ],
+    },
+    user456: {
             name: 'Jayed Bin Jamil',
             focusPoints: 300,
+            accessories: [],
             petType: 'frog',
             petMood: 'sleepy',
             streak: {
@@ -138,11 +166,12 @@ export const mockDatabase: { [userId: string]: UserData } = {
                             tags: ['urgent'],
                             status: TaskStatus.ONGOING
                         }
-                    ]
-        },
-        user100: {
+        ],
+    },
+    user100: {
             name: 'Mahdi Noor',
             focusPoints: 10,
+            accessories: [],
             petType: 'tutel',
             petMood: 'sad',
             streak: {
@@ -150,6 +179,53 @@ export const mockDatabase: { [userId: string]: UserData } = {
                 lastCompletionDate: new Date(Date.now() - 50 * 60 * 60 * 1000).toISOString(), // 50 hours ago
                 canRestore: false
             },
-            tasks: []
+        tasks: [],
+    },
+    user789: {
+        name: 'Jerin Aktar Anika',
+        focusPoints: 150,
+        accessories: ['Bow'],
+        petType: 'cow',
+        petMood: 'happy',
+        streak: {
+            currentStreak: 2,
+            lastCompletionDate: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
+            canRestore: false
         },
-            };
+        tasks: [
+            {
+                id: '301',
+                title: 'MAT120 Final',
+                description: 'Geometry',
+                dueDate: '2025-09-10',
+                dueTime: '10:00',
+                priority: 'High',
+                completedHours: 0,
+                tags: ['exam'],
+                status: TaskStatus.UPCOMING
+            },
+            {
+                id: '302',
+                title: 'CSE471 Project',
+                description: 'Module 3',
+                dueDate: '2025-09-12',
+                dueTime: '13:00',
+                priority: 'Medium',
+                completedHours: 2,
+                tags: ['project'],
+                status: TaskStatus.ONGOING
+            },
+            {
+                id: '303',
+                title: 'ENG115 Quiz',
+                description: 'World War II',
+                dueDate: '2025-09-15',
+                dueTime: '15:00',
+                priority: 'Low',
+                completedHours: 1,
+                tags: ['essay'],
+                status: TaskStatus.DONE
+            }
+        ],
+    },
+};

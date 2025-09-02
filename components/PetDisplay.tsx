@@ -61,7 +61,12 @@ const PetDisplay: React.FC<PetDisplayProps> = ({ userId }) => {
   };
 
   const displayMood = getPetMood({ petMood, hasOngoingStreak, canRestore, hoursSinceStreak });
-  const displayImgSrc = petImageMap[petType]?.[displayMood] || '/images/pet/basic/cow_happy.png';
+  let displayImgSrc = petImageMap[petType]?.[displayMood] || '/images/pet/basic/cow_happy.png';
+  // Check for accessories and use correct image if available
+  if (petType === 'cow' && user?.accessories?.includes('Bow')) {
+    const accessoryKey = `bow_${displayMood}`;
+    displayImgSrc = petImageMap.cow[accessoryKey] || displayImgSrc;
+  }
 
   return (
     <div style={{ position: 'relative', textAlign: 'center' }}>

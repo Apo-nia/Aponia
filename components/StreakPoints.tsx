@@ -14,34 +14,17 @@ interface StreakPointsProps {
   userId?: string;
 }
 
+
 const StreakPoints: React.FC<StreakPointsProps> = ({ userId }) => {
   const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [focusPoints, setFocusPoints] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [restoring, setRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<string>('user123');
-
-  // Set userId after component mounts to avoid SSR issues
-  useEffect(() => {
-    if (userId) {
-      setCurrentUserId(userId);
-    } else if (typeof window !== 'undefined') {
-      // Only use existing users from mock database
-      const storedUserId = localStorage.getItem('UserId');
-      if (storedUserId) {
-        setCurrentUserId(storedUserId);
-      } else {
-        // Default to user123 if no stored user - this user exists in mock database
-        localStorage.setItem('UserId', 'user123');
-        setCurrentUserId('user123');
-      }
-    }
-  }, [userId]);
 
   const fetchStreakData = async () => {
     try {
-      const response = await fetch(`/api/streak?userId=${currentUserId}`);
+      const response = await fetch(`/api/streak?userId=${userId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -69,7 +52,7 @@ const StreakPoints: React.FC<StreakPointsProps> = ({ userId }) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          userId: currentUserId, 
+          userId, 
           action: 'restore' 
         }),
       });
@@ -90,7 +73,7 @@ const StreakPoints: React.FC<StreakPointsProps> = ({ userId }) => {
   };
 
   useEffect(() => {
-    if (currentUserId) {
+    if (userId) {
       const loadData = async () => {
         setLoading(true);
         await fetchStreakData();
@@ -99,7 +82,7 @@ const StreakPoints: React.FC<StreakPointsProps> = ({ userId }) => {
 
       loadData();
     }
-  }, [currentUserId]);
+  }, [userId]);
 
   const getTimeSinceLastCompletion = () => {
     if (!streakData?.lastCompletionDate) return '';
