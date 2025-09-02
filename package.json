@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "next": "15.4.1",
+    "next": "^15.5.2",
+    "next-auth": "^4.24.11",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
