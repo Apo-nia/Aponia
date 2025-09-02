@@ -16,7 +16,7 @@ export default function ProfilePage()  {
       >
         <div className="flex justify-center items-center w-full max-w-4xl">
           <div>
-            <Profile />
+            <Profile userId="user456" />
           </div>
         </div>
         <Link href="/streaks">

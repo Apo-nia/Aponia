@@ -2,25 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 
-function getOrCreateUserId() {
-  let userId = localStorage.getItem('UserId');
-  if (!userId) {
-    userId = 'user123';
-    localStorage.setItem('UserId', userId);
-  }
-  return userId;
+
+interface PomodoroTimerProps {
+  userId: string;
 }
 
-const PomodoroTimer = () => {
+const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ userId }) => {
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [sessionType, setSessionType] = useState<'work' | 'break'>('work');
-  const [userId, setUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setUserId(getOrCreateUserId());
-  }, []);
 
   const incrementSessions = async () => {
     if (!userId) return;

@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         profile: {
             name: user.name,
             focusPoints: user.focusPoints,
-            petStatus: user.petStatus,
+            petMood: user.petMood,
             streak: user.streak
         }
     });

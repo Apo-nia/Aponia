@@ -10,7 +10,11 @@ interface Song {
 // angle for each song title to appear on the record
 const SONG_ANGLES = [-45, 0, 45]; 
 
-const AmbiancePlayer = () => {
+interface AmbiancePlayerProps {
+  userId: string;
+}
+
+const AmbiancePlayer: React.FC<AmbiancePlayerProps> = ({ userId }) => {
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);

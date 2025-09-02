@@ -1,8 +1,10 @@
 import PomodoroTimer from "../../components/PomodoroTimer";
 import AmbiancePlayer from "../../components/AmbiancePlayer";
 import Link from "next/link";
+import PetDisplay from "../../components/PetDisplay";
 
 export default function Home() {
+  const userId = "user456";
   return (
     <main 
       className="relative flex min-h-screen flex-col items-center justify-center p-12"
@@ -17,9 +19,11 @@ export default function Home() {
           <h2 className="text-lg font-semibold">Profile</h2>
         </button>
       </Link>
-      <AmbiancePlayer />
-      <PomodoroTimer />
-      {/* <img src="/pet.png" alt="Pet" className="absolute bottom-8 left-8 w-24" /> */}
+      <AmbiancePlayer userId={userId} />
+      <PomodoroTimer userId={userId} />
+      <div className="absolute bottom-8 left-10">
+        <PetDisplay userId={userId} />
+      </div>
     </main>
   );
 }
