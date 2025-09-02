@@ -16,10 +16,9 @@ export async function POST(request: Request) {
 
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-    // Get current date and time
     const currentDate = new Date();
-    const currentDateString = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const currentTimeString = currentDate.toTimeString().split(' ')[0].substring(0, 5); // HH:MM format
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentTimeString = currentDate.toTimeString().split(' ')[0].substring(0, 5);
 
     const prompt = `
       Today's date is ${currentDateString} and the current time is ${currentTimeString}.

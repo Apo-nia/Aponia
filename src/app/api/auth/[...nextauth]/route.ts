@@ -16,7 +16,6 @@ const handler = NextAuth({
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      // Allow only same-origin redirects; preserve relative callbackUrl
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       try {
         const parsed = new URL(url);
