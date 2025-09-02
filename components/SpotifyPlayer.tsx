@@ -93,8 +93,6 @@ export default function SpotifyPlayer() {
     }
   }, [session]);
 
-  // (Progress UI removed for a compact player)
-
   useEffect(() => {
     if (!deviceId || !session?.accessToken || !isReady) return;
 
@@ -209,7 +207,6 @@ export default function SpotifyPlayer() {
       }
     }
   };
-  // (Scrub/seek removed)
 
   if (!session) {
     return (
