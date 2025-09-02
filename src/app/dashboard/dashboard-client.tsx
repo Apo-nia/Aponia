@@ -4,14 +4,12 @@
 import { useState, useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
 import { ChevronDown, ChevronUp, Clock, Calendar, CheckCircle2, Circle } from 'lucide-react';
+import { createClient } from '@/lib/client';
 
 interface User {
   id: string;
@@ -44,8 +42,6 @@ export default function DashboardClient() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const [showDialog, setShowDialog] = useState(true);
-  const [userIdInput, setUserIdInput] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showCompleted, setShowCompleted] = useState(false);
 
@@ -57,17 +53,32 @@ export default function DashboardClient() {
     return () => clearInterval(timer);
   }, []);
 
-  const fetchDashboardData = async (userId: string) => {
+  // Fetch dashboard data on mount
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
     setLoading(true);
     setError('');
-    
+
+    const supabase = createClient();
+    const { data: { user: authUser }, error } = await supabase.auth.getUser();
+
+    if (error || !authUser) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    const userId = authUser.id;
+
     try {
       const response = await fetch(`/api/dashboard/${userId}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setDashboardData(data.data);
-        setShowDialog(false);
       } else {
         setError(data.error || 'Failed to fetch dashboard data');
       }
@@ -75,12 +86,6 @@ export default function DashboardClient() {
       setError('Network error occurred');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDialogSubmit = () => {
-    if (userIdInput.trim()) {
-      fetchDashboardData(userIdInput.trim());
     }
   };
 
@@ -179,39 +184,6 @@ export default function DashboardClient() {
 
   return (
     <>
-      {/* User ID Input Dialog */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="bg-slate-800 border-slate-700">
-          <DialogHeader>
-            <DialogTitle className="text-white">Welcome to Dashboard</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="userId" className="text-slate-300">User ID (UUID)</Label>
-              <Input
-                id="userId"
-                value={userIdInput}
-                onChange={(e) => setUserIdInput(e.target.value)}
-                placeholder="Enter user UUID..."
-                className="bg-slate-700 border-slate-600 text-white"
-              />
-            </div>
-            {error && (
-              <div className="text-red-400 text-sm">{error}</div>
-            )}
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleDialogSubmit}
-                disabled={!userIdInput.trim() || loading}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {loading ? 'Loading...' : 'Load Dashboard'}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Main Dashboard */}
       {dashboardData && (
         <div className="container mx-auto px-4 py-6 min-h-screen">
@@ -403,15 +375,7 @@ export default function DashboardClient() {
             </div>
           </div>
 
-          {/* Load Different User Button */}
-          <div className="fixed bottom-6 right-6">
-            <Button 
-              onClick={() => setShowDialog(true)}
-              className="bg-slate-700 hover:bg-slate-600 text-white shadow-lg"
-            >
-              Switch User
-            </Button>
-          </div>
+
         </div>
       )}
     </>

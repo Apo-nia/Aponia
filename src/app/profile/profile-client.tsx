@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { createClient } from '@/lib/client';
 
 interface User {
   id: string;
@@ -21,8 +21,6 @@ export default function ProfileClient() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const [showDialog, setShowDialog] = useState(true);
-  const [userIdInput, setUserIdInput] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [originalUser, setOriginalUser] = useState<User | null>(null);
 
@@ -35,26 +33,36 @@ export default function ProfileClient() {
     max_priority: ''
   });
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async () => {
     setLoading(true);
     setError('');
-    
+
+    const supabase = createClient();
+    const { data: { user: authUser }, error } = await supabase.auth.getUser();
+
+    if (error || !authUser) {
+      setError('User not authenticated');
+      setLoading(false);
+      return;
+    }
+
+    const userId = authUser.id;
+
     try {
       const response = await fetch(`/api/profile/${userId}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setUser(data.data);
         setOriginalUser(data.data);
         setFormData({
           first_name: data.data.first_name || '',
           last_name: data.data.last_name || '',
-          date_of_birth: data.data.date_of_birth ? 
+          date_of_birth: data.data.date_of_birth ?
             new Date(data.data.date_of_birth).toISOString().split('T')[0] : '',
           category: data.data.category.join(', '),
           max_priority: data.data.max_priority?.toString() || ''
         });
-        setShowDialog(false);
       } else {
         setError(data.error || 'Failed to fetch user profile');
       }
@@ -110,7 +118,7 @@ export default function ProfileClient() {
       setFormData({
         first_name: originalUser.first_name || '',
         last_name: originalUser.last_name || '',
-        date_of_birth: originalUser.date_of_birth ? 
+        date_of_birth: originalUser.date_of_birth ?
           new Date(originalUser.date_of_birth).toISOString().split('T')[0] : '',
         category: originalUser.category.join(', '),
         max_priority: originalUser.max_priority?.toString() || ''
@@ -120,11 +128,11 @@ export default function ProfileClient() {
     setError('');
   };
 
-  const handleDialogSubmit = () => {
-    if (userIdInput.trim()) {
-      fetchUserProfile(userIdInput.trim());
-    }
-  };
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -136,44 +144,6 @@ export default function ProfileClient() {
 
   return (
     <>
-      {/* User ID Input Dialog */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Enter User ID</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="userId">User ID (UUID)</Label>
-              <Input
-                id="userId"
-                value={userIdInput}
-                onChange={(e) => setUserIdInput(e.target.value)}
-                placeholder="Enter user UUID..."
-              />
-            </div>
-            {error && (
-              <div className="text-red-500 text-sm">{error}</div>
-            )}
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleDialogSubmit}
-                disabled={!userIdInput.trim() || loading}
-              >
-                {loading ? 'Loading...' : 'Load Profile'}
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setShowDialog(false)}
-                disabled={loading}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
       {/* Profile Display/Edit Form */}
       {user && (
         <div className="space-y-6 rounded-lg shadow-lg p-6">
@@ -181,26 +151,18 @@ export default function ProfileClient() {
             <h2 className="text-2xl font-semibold">Profile Information</h2>
             <div className="flex gap-2">
               {!isEditing ? (
-                <>
-                  <Button onClick={() => setIsEditing(true)}>
-                    Edit Profile
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => setShowDialog(true)}
-                  >
-                    Load Different User
-                  </Button>
-                </>
+                <Button onClick={() => setIsEditing(true)}>
+                  Edit Profile
+                </Button>
               ) : (
                 <>
-                  <Button 
+                  <Button
                     onClick={handleSubmit}
                     disabled={loading}
                   >
                     {loading ? 'Saving...' : 'Save Changes'}
                   </Button>
-                  <Button 
+                  <Button
                     variant="outline"
                     onClick={handleCancel}
                     disabled={loading}
