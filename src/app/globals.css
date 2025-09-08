@@ -1,0 +1,300 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+
+/* Anika added this css for Overwhelmed and Focus mode */
+/* Example styling hooks for custom modes */
+
+:root[data-ui-mode="overwhelmed"] { /* punchy UI */
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  filter: saturate(1.15);
+}
+
+
+/* === Dropdown / Submenu Animations === */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes scaleOut {
+  from { opacity: 1; transform: scale(1) translateY(0); }
+  to   { opacity: 0; transform: scale(0.96) translateY(-4px); }
+}
+
+.dropdown-animate {
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin, top right);
+  will-change: transform, opacity;
+  animation-duration: 150ms;
+  animation-timing-function: cubic-bezier(.22,1,.36,1);
+}
+.dropdown-animate[data-state="open"] { animation-name: scaleIn; }
+.dropdown-animate[data-state="closed"] { animation-name: scaleOut; }
+
+/* Menu items hover + press feedback */
+.menu-item {
+  transition: background-color 150ms ease, transform 120ms ease;
+}
+.menu-item:hover { background-color: rgb(255 255 255 / 0.08); }
+.menu-item:active { transform: translateY(1px); }
+
+/* Indicator pop animation */
+.menu-indicator {
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+[data-state="checked"] .menu-indicator {
+  transform: scale(1);
+  opacity: 1;
+}
+.menu-indicator { transform: scale(0.7); opacity: 0.8; }
+
+
+
+
+
+
+/* --- Center controls micro-animations (extra slow & calm) --- */
+
+/* fade+slide for tiny text swaps (e.g., the + Task label) */
+@keyframes fadeSwap {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.swap-fade {
+  animation: fadeSwap 420ms cubic-bezier(.22,1,.36,1);
+}
+
+/* subtle pop for the Planning Mode chip */
+@keyframes chipIn {
+  from { opacity: 0; transform: scale(.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.chip-animate {
+  animation: chipIn 380ms cubic-bezier(.22,1,.36,1);
+}
+
+/* shared transitions for the two toggle pills */
+.toggle-pill {
+  transition:
+    background-color 360ms ease,
+    color 360ms ease,
+    transform 280ms ease,
+    box-shadow 360ms ease;
+}
+.toggle-pill:hover { background-color: rgb(255 255 255 / 0.10); }
+.toggle-pill:active { transform: translateY(1px); }
+
+/* call-to-action button feel for + Task */
+.cta {
+  transition:
+    background-color 400ms ease,
+    border-color 400ms ease,
+    box-shadow 400ms ease,
+    transform 300ms ease;
+}
+.cta:hover { background-color: rgb(255 255 255 / 0.10); }
+.cta:active { transform: translateY(1px); }
+
+
+/* --- Toggle pill active-state animation --- */
+@keyframes pillSwap {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.pill-active {
+  animation: pillSwap 420ms cubic-bezier(.22,1,.36,1);
+}
+
+
+/* ===== DEFAULT (dark-ish slate) ===== */
+:root[data-ui-mode="default"] {
+  
+  --card-bg: color-mix(in oklch, #0f2e64 30%, black 70%);
+  --card-border: #1e3358; /* slate-ish */
+  transition: background-color .7s ease, border-color .6s ease;
+}
+
+/* ===== FOCUSED (calmer teal/blue) ===== */
+:root[data-ui-mode="focused"] {
+  
+  --card-bg: color-mix(in oklch, #0b4b57 35%, black 65%);
+  --card-border: #105b6a; /* teal border */
+  transition: background-color .7s ease, border-color .6s ease;
+}
+
+/* ===== OVERWHELMED (punchier indigo/rose) ===== */
+:root[data-ui-mode="overwhelmed"] {
+  
+  --card-bg: color-mix(in oklch, #3a134a 45%, black 55%);
+  --card-border: #6b1a7b; /* vivid edge */
+  transition: background-color .7s ease, border-color .6s ease;
+}
+
+
+
+/* Make gradient colors animatable */
+@property --g1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0f172a;
+}
+@property --g2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1e3a8a;
+}
+@property --g3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1e293b;
+}
+
+/* Slow, smooth transitions for the three stops */
+.page-gradient {
+  transition:
+    --g1 1200ms ease-in-out,
+    --g2 1200ms ease-in-out,
+    --g3 1200ms ease-in-out;
+}
+
+
+:root[data-ui-mode="default"] {
+  --g1: #0f172a;  /* slate-900 */
+  --g2: #1e3a8a;  /* indigo-800 */
+  --g3: #1e293b;  /* slate-800 */
+}
+
+:root[data-ui-mode="focused"] {
+  --g1: #111827;  /* gray-900 */
+  --g2: #1f2937;  /* gray-800 */
+  --g3: #374151;  /* gray-700 */
+}
+
+:root[data-ui-mode="overwhelmed"] {
+  --g1: #581c87;  /* purple-800 */
+  --g2: #be185d;  /* rose-600 */
+  --g3: #991b1b;  /* red-700 */
+}
