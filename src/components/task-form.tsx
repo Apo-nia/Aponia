@@ -225,7 +225,7 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
     console.log(loadPlanningMode(userId));
     setPlanningMode(loadPlanningMode(userId));
     // ensure the form has the same value
-  form.reset({ ...form.getValues(), task_type: mode });
+  form.reset({ ...form.getValues(), task_type: planningMode });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
