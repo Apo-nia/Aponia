@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Script from "next/script";
 
 declare global {
@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const LOFI_PLAYLIST_ID = "37i9dQZF1DWWQRwui0ExPn";
+const LOFI_PLAYLIST_ID = "5s4tOejaBZr2YsTm0kpiqz";
 
 export default function SpotifyPlayer() {
   const { data: session } = useSession();
@@ -23,22 +23,36 @@ export default function SpotifyPlayer() {
   const [isReady, setIsReady] = useState(false);
   const [volume, setVolume] = useState(30);
 
+  const spotifyInitRef = useRef(false);
+
   useEffect(() => {
     if (!session?.accessToken) return;
 
-    if (typeof window !== 'undefined' && window.Spotify) {
-      initializePlayer();
-    } else {
-      window.onSpotifyWebPlaybackSDKReady = initializePlayer;
-    }
+    let sdkCheckInterval: number | undefined;
+    console.debug('SpotifyPlayer: effect mount, accessToken exists');
 
     function initializePlayer() {
-      if (!session?.accessToken) return;
+      if (spotifyInitRef.current) {
+        console.debug('SpotifyPlayer: initializePlayer called but already initialized');
+        return;
+      }
+      if (!session?.accessToken) {
+        console.debug('SpotifyPlayer: no accessToken inside initializePlayer');
+        return;
+      }
+
+      if (!window.Spotify) {
+        console.debug('SpotifyPlayer: window.Spotify missing at initialize time');
+        return;
+      }
+
+      spotifyInitRef.current = true;
+      console.debug('SpotifyPlayer: creating Spotify.Player instance');
 
       const playerInstance = new window.Spotify.Player({
         name: "Aponia Lo-Fi Player",
-        getOAuthToken: (cb: (token: string) => void) => { 
-          cb(session.accessToken!); 
+        getOAuthToken: (cb: (token: string) => void) => {
+          cb(session.accessToken!);
         },
         volume: 0.3,
       });
@@ -61,7 +75,7 @@ export default function SpotifyPlayer() {
           setActive(false);
           return;
         }
-        
+
         setTrack(state.track_window.current_track);
         setPaused(state.paused);
         setActive(true);
@@ -91,6 +105,35 @@ export default function SpotifyPlayer() {
         }
       });
     }
+
+    if (typeof window !== 'undefined' && window.Spotify) {
+      console.debug('SpotifyPlayer: SDK already present, initializing');
+      initializePlayer();
+    } else {
+      console.debug('SpotifyPlayer: SDK not present yet, setting onSpotifyWebPlaybackSDKReady');
+      (window as any).onSpotifyWebPlaybackSDKReady = initializePlayer;
+
+      sdkCheckInterval = window.setInterval(() => {
+        if ((window as any).Spotify) {
+          console.debug('SpotifyPlayer: SDK detected via polling, initializing');
+          initializePlayer();
+          if (sdkCheckInterval) {
+            clearInterval(sdkCheckInterval);
+          }
+        }
+      }, 500) as unknown as number;
+    }
+
+    return () => {
+      if (sdkCheckInterval) clearInterval(sdkCheckInterval);
+      try {
+        if ((window as any).onSpotifyWebPlaybackSDKReady === initializePlayer) {
+          (window as any).onSpotifyWebPlaybackSDKReady = undefined;
+        }
+      } catch (e) {
+        /* ignore */
+      }
+    };
   }, [session]);
 
   useEffect(() => {
