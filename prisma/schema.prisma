@@ -15,18 +15,30 @@ model tasks {
   description String?
   deadline    DateTime? @db.Timestamptz(6)
   reminder    DateTime? @db.Timestamptz(6)
-  category_no Int?      @db.SmallInt
-  priority_no Int?      @db.SmallInt
+  category_no String?   @db.VarChar
+  priority_no String?   @db.VarChar
   completed   Boolean?  @default(false)
-  task_type   String    @db.VarChar
+  task_type   String    @default("study") @db.VarChar(20)
 }
 
 model users {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  first_name    String?   @db.VarChar
-  last_name     String?   @db.VarChar
-  date_of_birth DateTime? @db.Date
-  category      String[]  @db.VarChar
-  max_priority  Int?      @db.SmallInt
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  first_name          String?   @db.VarChar
+  last_name           String?   @db.VarChar
+  date_of_birth       DateTime? @db.Date
+  category            String[]  @db.VarChar
+  max_priority        Int?      @db.SmallInt
+  session_count       Int?      @default(0) @db.SmallInt
+  last_session_update DateTime? @db.Timestamptz(6)
+  focus_point         Int?      @default(0)
+  streaks             Int?      @default(0)
+  pet                 String?   @default("NULL")
+  accessories         String?   @default("NULL")
+  pet_mood            String?   @default("NULL")
+}
+
+model motivational {
+  id     BigInt  @id @default(autoincrement())
+  quotes String?
 }

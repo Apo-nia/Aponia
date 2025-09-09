@@ -59,8 +59,8 @@ interface TaskFormProps {
     description: string | null;
     deadline: Date | null;
     reminder: Date | null;
-    category_no: number | null;
-    priority_no: number | null;
+    category_no: string | null;
+    priority_no: string | null;
     completed: boolean | null;
   };
   mode?: "create" | "edit";
@@ -232,12 +232,12 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
   const form = useForm<TaskFormData>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
-      title: initialData?.title || "",
-      description: initialData?.description || "",
+      title: initialData?.title || "Enter task title",
+      description: initialData?.description || "Enter task description",
       deadline: initialData?.deadline || null,
       reminder: initialData?.reminder || null,
-      category_no: initialData?.category_no || null,
-      priority_no: initialData?.priority_no || null,
+      category_no: initialData?.category_no || "Other", // Default to "Other" category
+      priority_no: initialData?.priority_no || "Medium", // Default to "Medium" priority
       completed: initialData?.completed ?? false,
       task_type: planningMode, // <— bind default to current mode
     },
@@ -401,8 +401,8 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
               <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Select
-                  value={field.value?.toString() || ""}
-                  onValueChange={(value) => field.onChange(value ? parseInt(value) : null)}
+                  value={field.value || ""}
+                  onValueChange={field.onChange}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -410,11 +410,11 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="1">Work</SelectItem>
-                    <SelectItem value="2">Personal</SelectItem>
-                    <SelectItem value="3">Shopping</SelectItem>
-                    <SelectItem value="4">Health</SelectItem>
-                    <SelectItem value="5">Other</SelectItem>
+                    <SelectItem value="Work">Work</SelectItem>
+                    <SelectItem value="Personal">Personal</SelectItem>
+                    <SelectItem value="Shopping">Shopping</SelectItem>
+                    <SelectItem value="Health">Health</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -429,8 +429,8 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
               <FormItem>
                 <FormLabel>Priority</FormLabel>
                 <Select
-                  value={field.value?.toString() || ""}
-                  onValueChange={(value) => field.onChange(value ? parseInt(value) : null)}
+                  value={field.value || ""}
+                  onValueChange={field.onChange}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -438,10 +438,10 @@ export function TaskForm({ initialData, mode = "edit", userId }: TaskFormProps) 
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="1">Low</SelectItem>
-                    <SelectItem value="2">Medium</SelectItem>
-                    <SelectItem value="3">High</SelectItem>
-                    <SelectItem value="4">Critical</SelectItem>
+                    <SelectItem value="Low">Low</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="High">High</SelectItem>
+                    <SelectItem value="Critical">Critical</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

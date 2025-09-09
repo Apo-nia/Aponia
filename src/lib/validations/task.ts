@@ -5,8 +5,8 @@ export const taskFormSchema = z.object({
   description: z.string().nullable(),
   deadline: z.date().nullable(),
   reminder: z.date().nullable(),
-  category_no: z.number().int().min(0).nullable(),
-  priority_no: z.number().int().min(0).nullable(),
+  category_no: z.string().nullable(),
+  priority_no: z.string().nullable(),
   completed: z.boolean(),
   task_type: z.enum(["study", "content"]), // <— NEW
 });

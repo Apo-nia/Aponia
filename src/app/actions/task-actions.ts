@@ -65,7 +65,7 @@ export async function updateTask(taskId: string, data: TaskFormData) {
         completed: data.completed,
       },
     });
-    
+
     revalidatePath("/tasks"); // Adjust path as needed
     return { success: true, task: updatedTask };
   } catch (error) {
